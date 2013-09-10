@@ -62,7 +62,31 @@
 
 int * readIntegers(const char * filename, int * numberOfIntegers)
 {
-    return NULL;
+  int number = 1;
+  int *arr;
+  FILE* fptr = fopen(filename,"r");
+  int val;
+  if(fptr == NULL)
+    {
+      return NULL;
+    }
+    while(fscanf(fptr , "%d" , & val) == 1)
+    {
+      number++;
+      }
+  number--;
+  *numberOfIntegers = number;
+  arr = malloc(number * sizeof(int));
+  number = 0;
+  fseek(fptr , 0 , SEEK_SET);
+  while(fscanf(fptr , "%d" , & val) == 1)
+    {
+      arr[number] = val;
+      number++;
+    }
+  fclose(fptr);
+  return arr;
+  
 }
 
 /**
@@ -104,42 +128,57 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
  */
 void sort(int * arr, int length)
 {
-  int low = 0;
-  int high = length - 1;
+  // int low = 0;
+  //int high = length - 1;
   
-  quicksort(arr , low , high);
+  //quicksort(arr , low , high);
 }
 
-void quicksort(int * arr,int low , int high)
+/**void quicksort(int arr[] , int low , int high)
 {
-  int pivot = arr[low];
-  int left = low;
+   int left = low;
   int right = high;
+  int pivot = arr[low];
+  int point;
 
-  while (left < right)
+  while(left< high)
     {
-      if(arr[left] <= pivot)
+      while((arr[right] >= pivot) && (left < right))
 	{
-	  left++;
+	  right--;
+	}
+      if(left == right)
+	{
+	  arr[left] = pivot;
+	  point = left;
+	  quicksort(arr , low , point - 1);
+	  quicksort(arr , point + 1 , high);
 	}
       else
 	{
-	  sorthelp(&arr[left] , &arr[--right]);
+	  arr[left] = arr[right];
+	  left++;
+	  while((arr[left] <= pivot) && (left < right))
+	    {
+	      left++;
+	      if(left == right)
+		{
+		  arr[left] = pivot;
+		  point = left;
+		  quicksort(arr , low , point - 1);
+		  quicksort(arr , point + 1 , high);
+		}
+	      else
+		{
+		  arr[right] = arr[left];
+		  right--;
+		}
+	    }
 	}
-    }
-  sorthelp(&arr[--left] , &arr[low]);
-  quicksort(arr , low , left);
-  quicksort(arr , right , high);
-}
+	}
+	}*/
 
-void sorthelp(int *x , int *y)
-{
-  int temp = *x;
-  *x = *y;
-  *y = temp;aaa
-}
-
-/**
+ /**
  * Use binary search to find 'key' in a sorted array of integers
  *
  * Arguments:
