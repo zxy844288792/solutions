@@ -104,7 +104,39 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
  */
 void sort(int * arr, int length)
 {
-    
+  int low = 0;
+  int high = length - 1;
+  
+  quicksort(arr , low , high);
+}
+
+void quicksort(int * arr,int low , int high)
+{
+  int pivot = arr[low];
+  int left = low;
+  int right = high;
+
+  while (left < right)
+    {
+      if(arr[left] <= pivot)
+	{
+	  left++;
+	}
+      else
+	{
+	  sorthelp(&arr[left] , &arr[--right]);
+	}
+    }
+  sorthelp(&arr[--left] , &arr[low]);
+  quicksort(arr , low , left);
+  quicksort(arr , right , high);
+}
+
+void sorthelp(int *x , int *y)
+{
+  int temp = *x;
+  *x = *y;
+  *y = temp;
 }
 
 /**
