@@ -143,11 +143,6 @@ void quicksort(int arr[] , int low , int high)
   int left = low + 1;
   int right = high;
   
-  if(left >= right)
-    {
-      return;
-    }
-  
   while(left < right)
     {
       while(left < right && arr[right] >= pivot)
@@ -168,6 +163,10 @@ void quicksort(int arr[] , int low , int high)
       sorthelp(arr , low , left);
       quicksort(arr , low , left - 1);
       quicksort(arr , left + 1, right);
+    }
+  else
+    {
+      quicksort(arr , low + 1 , high);
     }
 }
 void sorthelp(int arr[] , int left , int right)
