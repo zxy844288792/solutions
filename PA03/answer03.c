@@ -223,7 +223,34 @@ void sorthelp(int arr[] , int left , int right)
  */
 int search(int * arr, int length, int key)
 {
-    return -1;
+  int binary(int * , int , int , int);
+
+  int min = arr[0];
+  int max = arr[length - 1];
+  int out = binary(arr , key , min , max);
+  return out;
 }
 
-
+int binary(int arr[] , int key , int min , int max)
+{
+  if(max < min)
+    {
+      return -1;
+    }
+  else
+    {
+      int mid = (min + max) / 2;
+      if(arr[mid] > key)
+	{
+	  return binary(arr , key , min , mid - 1);
+	}
+	else if(arr[mid] < key)
+	  {
+	    return binary(arr , key , mid+ 1 , max);
+	  }
+	else
+	  {
+	    return mid;
+	  }
+    }
+}
