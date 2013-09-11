@@ -143,15 +143,20 @@ void quicksort(int arr[] , int low , int high)
   int left = low + 1;
   int right = high;
   
+  if(left >= right)
+    {
+      return;
+    }
+  
   while(left < right)
     {
-      while(left < right && arr[right] <= pivot)
+      while(left < right && arr[right] >= pivot)
 	{
-	  left--;
+	  right--;
 	}
-      while(left < right && arr[left] >= pivot)
+      while(left < right && arr[left] <= pivot)
 	{
-	  right++;
+	  left++;
 	}
       if(left < right)
 	{
@@ -164,10 +169,6 @@ void quicksort(int arr[] , int low , int high)
       quicksort(arr , low , left - 1);
       quicksort(arr , left + 1, right);
     }
-  else
-    {
-      quicksort(arr , low + 1 , high);
-    }
 }
 void sorthelp(int arr[] , int left , int right)
 {
@@ -175,6 +176,7 @@ void sorthelp(int arr[] , int left , int right)
   arr[right] = arr[left];
   arr[left] = temp;
 }
+
 
  /**
  * Use binary search to find 'key' in a sorted array of integers
