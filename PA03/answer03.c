@@ -128,55 +128,53 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
  */
 void sort(int * arr, int length)
 {
-  // int low = 0;
-  //int high = length - 1;
+  void quicksort(int *,int,int);
+  int low = 0;
+  int high = length - 1;
   
-  //quicksort(arr , low , high);
+  quicksort(arr , low , high);
 }
 
-/**void quicksort(int arr[] , int low , int high)
+void quicksort(int arr[] , int low , int high)
 {
-   int left = low;
-  int right = high;
-  int pivot = arr[low];
-  int point;
+  void sorthelp(int * , int , int);
 
-  while(left< high)
+  int pivot = arr[low];
+  int left = low + 1;
+  int right = high;
+  
+  while(left < right)
     {
-      while((arr[right] >= pivot) && (left < right))
+      while(left < right && arr[right] <= pivot)
 	{
-	  right--;
+	  left--;
 	}
-      if(left == right)
+      while(left < right && arr[left] >= pivot)
 	{
-	  arr[left] = pivot;
-	  point = left;
-	  quicksort(arr , low , point - 1);
-	  quicksort(arr , point + 1 , high);
+	  right++;
 	}
-      else
+      if(left < right)
 	{
-	  arr[left] = arr[right];
-	  left++;
-	  while((arr[left] <= pivot) && (left < right))
-	    {
-	      left++;
-	      if(left == right)
-		{
-		  arr[left] = pivot;
-		  point = left;
-		  quicksort(arr , low , point - 1);
-		  quicksort(arr , point + 1 , high);
-		}
-	      else
-		{
-		  arr[right] = arr[left];
-		  right--;
-		}
-	    }
+	  sorthelp(arr , left , right);
 	}
-	}
-	}*/
+    }
+  if(arr[low] > arr[left])
+    {
+      sorthelp(arr , low , left);
+      quicksort(arr , low , left - 1);
+      quicksort(arr , left + 1, right);
+    }
+  else
+    {
+      quicksort(arr , low + 1 , high);
+    }
+}
+void sorthelp(int arr[] , int left , int right)
+{
+  int temp = arr[right];
+  arr[right] = arr[left];
+  arr[left] = temp;
+}
 
  /**
  * Use binary search to find 'key' in a sorted array of integers
