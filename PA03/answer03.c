@@ -144,32 +144,40 @@ void quicksort(int arr[] , int low , int high)
   int right = high;
   int pivot = arr[low];
 
-  if(left < right)
+  if(left >= right)
     {
-      while(left < right)
+      return;
+    }
+
+  while(left < right)
+    { 
+      while(left < right && arr[right] >= pivot)
 	{
-	  while(arr[left] < pivot)
-	    {
-	      left++;
-	    }
-	  while(arr[right] > pivot)
-	    {
-	      right--;
-	    }
+	  right--;
+	}
+      while(left < right && arr[left] <= pivot)
+	{
+	  left++;
+	}
+      if(left < right)
+	{
 	  swap(arr , left ,right);
 	}
-      if(arr[low] > arr[left])
-	{
-	  swap(arr , low , left);
-	}
-      else
-	{
-	  swap(arr , low , left - 1);
-	}
-      quicksort(arr, right, high);
-      quicksort(arr, low, left);
+    }
+  if(arr[low] > arr[left])
+    {
+      swap(arr , low , left);
+      quicksort(arr, low , left - 1);
+      quicksort(arr, left + 1, right);
+    }
+  else if(arr[low] < arr[left])
+    {
+      swap(arr , low , left - 1);
+      quicksort(arr, low , left - 1);
+      quicksort(arr, left + 1, right);
     }
 }
+
 
 void swap(int arr[] , int first , int second)
 {
