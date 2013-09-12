@@ -129,6 +129,7 @@ int * readIntegers(const char * filename, int * numberOfIntegers)
 void sort(int * arr, int length)
 {
   void quicksort(int *,int,int);
+
   int low = 0;
   int high = length - 1;
   
@@ -137,43 +138,44 @@ void sort(int * arr, int length)
 
 void quicksort(int arr[] , int low , int high)
 {
-  void sorthelp(int * , int , int);
+  void swap(int *, int , int);
 
-  int pivot = arr[low];
   int left = low + 1;
   int right = high;
-  
-  while(left < right)
+  int pivot = arr[low];
+
+  if(left < right)
     {
-      while(left < right && arr[right] >= pivot)
+      while(left < right)
 	{
-	  right--;
+	  while(arr[left] < pivot)
+	    {
+	      left++;
+	    }
+	  while(arr[right] > pivot)
+	    {
+	      right--;
+	    }
+	  swap(arr , left ,right);
 	}
-      while(left < right && arr[left] <= pivot)
+      if(arr[low] > arr[left])
 	{
-	  left++;
+	  swap(arr , low , left);
 	}
-      if(left < right)
+      else
 	{
-	  sorthelp(arr , left , right);
+	  swap(arr , low , left - 1);
 	}
-    }
-  if(arr[low] > arr[left])
-    {
-      sorthelp(arr , low , left);
-      quicksort(arr , low , left - 1);
-      quicksort(arr , left + 1, right);
-    }
-  else
-    {
-      quicksort(arr , low + 1 , high);
+      quicksort(arr, right, high);
+      quicksort(arr, low, left);
     }
 }
-void sorthelp(int arr[] , int left , int right)
+
+void swap(int arr[] , int first , int second)
 {
-  int temp = arr[right];
-  arr[right] = arr[left];
-  arr[left] = temp;
+  int temp = arr[second];
+  arr[second] = arr[first];
+  arr[first] = temp;
 }
 
 
@@ -254,3 +256,4 @@ int binary(int arr[] , int key , int min , int max)
 	  }
     }
 }
+
