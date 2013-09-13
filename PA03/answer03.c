@@ -138,52 +138,43 @@ void sort(int * arr, int length)
 
 void quicksort(int arr[] , int low , int high)
 {
-  void swap(int *, int , int);
-
-  int left = low + 1;
-  int right = high;
+  /* * I tried hundreds of times the methods what professor said in the class but there are always fatal errors so I looked into some other methods to solve this problem
+   */
   int pivot = arr[low];
-
-  if(left >= right)
-    {
-      return;
-    }
-
+  int left = low; 
+  int right = high;
+ 
   while(left < right)
-    { 
-      while(left < right && arr[right] >= pivot)
-	{
-	  right--;
-	}
-      while(left < right && arr[left] <= pivot)
-	{
-	  left++;
-	}
-      if(left < right)
-	{
-	  swap(arr , left ,right);
-	}
-    }
-  if(arr[low] > arr[left])
+  {
+    while(left < right && arr[right] >= pivot)
+      {
+	right--;
+      }
+    if(left != right)
     {
-      swap(arr , low , left);
-      quicksort(arr, low , left - 1);
-      quicksort(arr, left + 1, right);
+      arr[left] = arr[right];
+      left++;
     }
-  else if(arr[low] < arr[left])
+    while(left < right && arr[left] <= pivot)
+      {
+	left++;
+      }
+    if(left != right)
     {
-      swap(arr , low , left - 1);
-      quicksort(arr, low , left - 1);
-      quicksort(arr, left + 1, right);
+      arr[right] = arr[left];
+      right--;
     }
-}
-
-
-void swap(int arr[] , int first , int second)
-{
-  int temp = arr[second];
-  arr[second] = arr[first];
-  arr[first] = temp;
+  }
+  arr[left] = pivot;
+  pivot = left;
+  if(low < pivot)
+    {
+      quicksort(arr, low, pivot-1);
+    }
+  if(high > pivot)
+    {
+      quicksort(arr, pivot+1, high);
+    }
 }
 
 
@@ -235,8 +226,8 @@ int search(int * arr, int length, int key)
 {
   int binary(int * , int , int , int);
 
-  int min = arr[0];
-  int max = arr[length - 1];
+  int min = 0;
+  int max = length - 1;
   int out = binary(arr , key , min , max);
   return out;
 }
@@ -254,14 +245,13 @@ int binary(int arr[] , int key , int min , int max)
 	{
 	  return binary(arr , key , min , mid - 1);
 	}
-	else if(arr[mid] < key)
-	  {
-	    return binary(arr , key , mid+ 1 , max);
-	  }
-	else
-	  {
-	    return mid;
-	  }
+      else if(arr[mid] < key)
+	{
+	  return binary(arr , key , mid+ 1 , max);
+	}
+      else
+	{
+	  return mid;
+	}
     }
 }
-
