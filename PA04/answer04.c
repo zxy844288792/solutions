@@ -92,8 +92,29 @@ void print_buffer(int* arr , int length)
 
 void partitionIncreasing(int value)
 {
+  void partitionHelpIncrease(int * , int , int);
   printf("partitionIncreasing %d\n", value);
-
+  int * buffer = malloc(value * sizeof(int));
+  partitionHelpIncrease(buffer , 0 , value);
+  free(buffer);
+}
+void partitionHelpIncrease(int* arr , int pos , int value)
+{
+  void print_buffer(int * , int);
+  if(value == 0)
+    {
+      print_buffer(arr , pos);
+      return;
+    }
+  int index;
+  for(index = 1;index <= value;index++)
+    {
+      if(index > arr[pos - 1] || pos == 0)
+	{
+	  arr[pos] = index;
+	  partitionHelpIncrease(arr , pos + 1, value - index);
+	}
+    }
 }
 
 /*
@@ -118,10 +139,30 @@ void partitionIncreasing(int value)
 
 void partitionDecreasing(int value)
 {
+  void partitionHelpDecrease(int *, int , int);
   printf("partitionDecreasing %d\n", value);
-  
-
+  int * buffer = malloc(value * sizeof(int));
+  partitionHelpDecrease(buffer , 0 , value);
+  free(buffer);
 }
+void partitionHelpDecrease(int* arr , int pos , int value)
+{
+  void print_buffer(int * , int);
+  if(value == 0)
+    {
+      print_buffer(arr , pos);
+      return;
+    }
+  int index;
+  for(index = 1;index <= value;index++)
+    {
+      if(index < arr[pos - 1] || pos == 0)
+	{
+	arr[pos] = index;
+	partitionHelpDecrease(arr , pos + 1, value - index);
+	}
+    }
+} 
 
 /*
  * =================================================================
