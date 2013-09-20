@@ -328,5 +328,50 @@ void partitionHelpOddEven(int* arr , int pos , int value)
 void partitionPrime(int value)
 {
   printf("partitionPrime %d\n", value);
+  void partitionHelpPrime(int *, int , int);
+  int * buffer = malloc(value * sizeof(int));
+  partitionHelpPrime(buffer , 0 , value);
+  free(buffer);
+}
+void partitionHelpPrime(int* arr , int pos , int value)
+{
+  void print_buffer(int * , int);
+  int isprime(int);
+  int condition;
+  if(value == 0)
+    {
+      print_buffer(arr , pos);
+      return;
+    }
+  int index;
+  for(index = 1;index <= value;index++)
+    { 
+      condition = isprime(index);
+      if(condition == 1)
+	{
+	  arr[pos] = index;
+	  partitionHelpPrime(arr , pos + 1, value - index);
+	}
+    }
+}  
 
+int isprime(int number)
+{
+  if(number == 1)
+    {
+      return 0;
+    }
+  if(number > 2 && number % 2 == 0)
+    {
+      return 0;
+    }
+  int index3;
+  for(index3 = 3;index3 < number;index3 += 2)
+    {
+      if(number % index3 == 0)
+	{
+	  return 0;
+	}
+    }
+  return 1;
 }
