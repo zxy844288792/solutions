@@ -15,7 +15,7 @@
 #include "pa04.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <math.h>
 
 
 /*
@@ -33,8 +33,42 @@
 
 void partitionAll(int value)
 {
+  void partitionHelp(int * , int , int);
   printf("partitionAll %d\n", value);
-  
+    int * buffer = malloc(value * sizeof(int));
+  partitionHelp(buffer , 0 , value);
+  free(buffer);
+}
+
+void partitionHelp(int* arr , int pos , int value)
+{
+  void print_buffer(int * , int);
+  if(value == 0)
+    {
+      print_buffer(arr , pos);
+      return;
+    }
+  int index;
+  for(index = 1;index <= value;index++)
+    {
+      arr[pos] = index;
+      partitionHelp(arr , pos + 1, value - index);
+    }
+}
+
+void print_buffer(int* arr , int length)
+{
+  int lcv;
+  printf("= ");
+  if(length > 0)
+    {
+      printf("%d" , arr[0]);
+    }
+  for(lcv = 1; lcv< length;lcv++)
+    {
+      printf(" + %d", arr[lcv]);
+    }
+  printf("\n");
 }
 /*
  * =================================================================
