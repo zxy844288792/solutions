@@ -185,8 +185,32 @@ void partitionHelpDecrease(int* arr , int pos , int value)
 void partitionOdd(int value)
 {
   printf("partitionOdd %d\n", value);
-  
+    void partitionHelpOdd(int *, int , int);
+  int * buffer = malloc(value * sizeof(int));
+  partitionHelpOdd(buffer , 0 , value);
+  free(buffer);
 }
+void partitionHelpOdd(int* arr , int pos , int value)
+{
+  void print_buffer(int * , int);
+  if(value == 0)
+    {
+      print_buffer(arr , pos);
+      return;
+    }
+  int index;
+  for(index = 1;index <= value;index++)
+    {
+      if(index % 2 != 1)
+	{
+	}
+      else
+	{
+	  arr[pos] = index;
+	  partitionHelpOdd(arr , pos + 1, value - index);
+	}
+    }
+}  
 
 /*
  * =================================================================
@@ -210,7 +234,31 @@ void partitionOdd(int value)
 void partitionEven(int value)
 {
   printf("partitionEven %d\n", value);
-
+    void partitionHelpEven(int *, int , int);
+  int * buffer = malloc(value * sizeof(int));
+  partitionHelpEven(buffer , 0 , value);
+  free(buffer);
+}
+void partitionHelpEven(int* arr , int pos , int value)
+{
+  void print_buffer(int * , int);
+  if(value == 0)
+    {
+      print_buffer(arr , pos);
+      return;
+    }
+  int index;
+  for(index = 1;index <= value;index++)
+    {
+      if(index % 2 != 0)
+	{
+	}
+      else
+	{
+	  arr[pos] = index;
+	  partitionHelpEven(arr , pos + 1, value - index);
+	}
+    }
 }
 
 /*
