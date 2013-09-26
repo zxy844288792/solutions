@@ -191,6 +191,11 @@ char * * readString(char * filename, int * numString)
  */
 void printInteger(int * arrInteger, int numInteger)
 {
+  int index1;
+  for(index1 = 0;index1 < numInteger;index1++)
+    {
+      printf("%d\n" , arrInteger[index1]);
+    }
 }
 
 /* ----------------------------------------------- */
@@ -201,6 +206,11 @@ void printInteger(int * arrInteger, int numInteger)
  */
 void printString(char * * arrString, int numString)
 {
+  int index2;
+  for(index2 = 0;index2 < numString ;index2++)
+    {
+      printf("%s\n" , arrString[index2]);
+    }
 }
 
 /* ----------------------------------------------- */
