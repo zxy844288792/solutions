@@ -63,6 +63,30 @@
 
 int * readInteger(char * filename, int * numInteger)
 {
+  int number = 1;
+  int *arr;
+  FILE* fptr = fopen(filename,"r");
+  int val;
+  if(fptr == NULL)
+    {
+      return NULL;
+    }
+    while(fscanf(fptr , "%d" , & val) == 1)
+    {
+      number++;
+      }
+  number--;
+  *numInteger = number;
+  arr = malloc(number * sizeof(int));
+  number = 0;
+  fseek(fptr , 0 , SEEK_SET);
+  while(fscanf(fptr , "%d" , & val) == 1)
+    {
+      arr[number] = val;
+      number++;
+    }
+  fclose(fptr);
+  return arr;
 }
 
 /* ----------------------------------------------- */
@@ -133,6 +157,32 @@ int * readInteger(char * filename, int * numInteger)
 
 char * * readString(char * filename, int * numString)
 {
+  int number = 0;
+  char buff[MAXIMUM_LENGTH];
+  FILE* fptr = fopen(filename,"r");
+  if(fptr == NULL)
+    {
+      return NULL;
+    }
+  fscanf(fptr , "%s" , buff);
+  fgets(buff, MAXIMUM_LENGTH, fptr);
+  while(fgets(buff, MAXIMUM_LENGTH , fptr) != NULL)
+    {
+      number++;
+    }
+  char * * strArr;
+  *numString = number;
+  strArr = malloc(number * sizeof(char*));
+  int ind = 0;
+  fseek(fptr , 0 , SEEK_SET);
+  while(fgets(buff , MAXIMUM_LENGTH,fptr) != NULL)
+    {
+      strArr[ind] = malloc(sizeof(char*) * (strlen(buff) + 1));
+      strcpy(strArr[ind],buff);
+      ind++;
+    }
+  fclose(fptr);
+  return strArr;
 }
 
 /* ----------------------------------------------- */
