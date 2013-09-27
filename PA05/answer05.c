@@ -326,8 +326,34 @@ int saveString(char * filename, char * * arrString, int numString)
 
 void sortInteger(int * arrInteger, int numInteger)
 {
+  //int cmp_1(int* , int*);
+  //int cmp_2(int *q , int *b);
+  int comint(const void * , const void *);
+  // int cominte = comint(
+  qsort(&arrInteger , numInteger , sizeof(arrInteger[0]) , comint);
 }
 
+//int cmp_1(int *a , int *b)
+//{
+//  return(*a - *b);
+//}
+int comint(const void * p1 , const void *p2)
+{
+  int * intp1 = (int *)p1;
+  int * intp2 = (int *)p2;
+  int intv1 = * intp1;
+  int intv2 = * intp2;
+  intv1 = * p1;
+  if(intv1 < intv2)
+    {
+      return -1;
+    }
+  if(intv1 == intv2)
+    {
+      return 0;
+    }
+  return 1;
+  }
 
 /* ----------------------------------------------- */
 /*
