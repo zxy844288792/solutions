@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pa05.h"
-#define MAXIMUM_LENGTH 80
+#define MAXIMUM_LENGTH 180
 
 /*
  * Read a file of integers.
@@ -158,19 +158,19 @@ int * readInteger(char * filename, int * numInteger)
 char * * readString(char * filename, int * numString)
 {
   int number = 0;
-  char buff[MAXIMUM_LENGTH];
   FILE* fptr = fopen(filename,"r");
   if(fptr == NULL)
     {
       return NULL;
     }
-  fgets(buff, MAXIMUM_LENGTH, fptr);
+  char * buff = malloc(sizeof(char*) * MAXIMUM_LENGTH);
+  //fgets(buff, MAXIMUM_LENGTH, fptr);
   while(fgets(buff, MAXIMUM_LENGTH , fptr) != NULL)
     {
       number++;
     }
   char * * strArr;
-  *numString = number;
+  //*numString = number;
   strArr = malloc(number * sizeof(char*));
   int ind = 0;
   fseek(fptr , 0 , SEEK_SET);
@@ -181,6 +181,8 @@ char * * readString(char * filename, int * numString)
       ind++;
     }
   fclose(fptr);
+  *numString = ind;
+  free(buff);
   return strArr;
 }
 
@@ -205,10 +207,17 @@ void printInteger(int * arrInteger, int numInteger)
  */
 void printString(char * * arrString, int numString)
 {
-  int index2;
-  for(index2 = 0;index2 < numString ;index2++)
+  int index2 = 0;
+  int len;
+  while(index2 < numString)
     {
-      printf("%s\n" , arrString[index2]);
+      printf("%s" , arrString[index2]);
+      len = strlen(arrString[index2]);
+      if(len == 0 || arrString[index2][len - 1] != '\n')
+	{
+	  printf("\n");
+	}
+      index2++;
     }
 }
 
@@ -234,7 +243,7 @@ void freeString(char * * arrString, int numString)
     {
       free(arrString[row]);
     }
-  free(arrString);
+    free(arrString);
 }
 
 /* ----------------------------------------------- */
@@ -270,7 +279,7 @@ int saveInteger(char * filename, int * arrInteger, int numInteger)
     {
       return 0;
     }
-  return 1;
+    return 1;
 }
 
 /* ----------------------------------------------- */
@@ -295,24 +304,18 @@ int saveString(char * filename, char * * arrString, int numString)
 {
   FILE * fptr = fopen(filename , "w");
   int index4 = 0;
-  int value = 1;
-  int line = 1;
-  while(line <= numString && value >= 0)
+  int len;
+  while(index4 < numString)
     {
-      while(arrString[line][index4] != '\0' && value >= 0)
+      fprintf(fptr , "%s", arrString[index4]);
+      len = strlen(arrString[index4]);
+      if(len == 0 || arrString[index4][len - 1] != '\n')
 	{
-	  value = fprintf(fptr , "%s", arrString[index4]);
-	  index4 = 0;
-	  index4++;
+	  fprintf(fptr , "\n");
 	}
-      value = fprintf(fptr , "\n");
-      line++;
+      index4++;
     }
   fclose(fptr);
-  if(value < 0)
-    {
-      return 0;
-    }
   return 1;
 }
 
@@ -326,24 +329,16 @@ int saveString(char * filename, char * * arrString, int numString)
 
 void sortInteger(int * arrInteger, int numInteger)
 {
-  //int cmp_1(int* , int*);
-  //int cmp_2(int *q , int *b);
   int comint(const void * , const void *);
-  // int cominte = comint(
-  qsort(&arrInteger , numInteger , sizeof(arrInteger[0]) , comint);
+  qsort(&arrInteger[0] , numInteger , sizeof(int) , comint);
 }
 
-//int cmp_1(int *a , int *b)
-//{
-//  return(*a - *b);
-//}
-int comint(const void * p1 , const void *p2)
+int comint(const void*p1 , const void*p2)
 {
   int * intp1 = (int *)p1;
   int * intp2 = (int *)p2;
   int intv1 = * intp1;
   int intv2 = * intp2;
-  intv1 = * p1;
   if(intv1 < intv2)
     {
       return -1;
@@ -368,6 +363,16 @@ int comint(const void * p1 , const void *p2)
 
 void sortString(char * * arrString, int numString)
 {
+  int comint2(const void * , const void *);
+  qsort(arrString, numString , sizeof(char*) , comint2);
 }
 
+int comint2(const void * p1 , const void * p2)
+{
+  char ** intp1 = (char **)p1;
+  char ** intp2 = (char **)p2;
+  char* intv1 = * intp1;
+  char* intv2 = * intp2;
+  return strcmp(intv1 , intv2);
+}
 
