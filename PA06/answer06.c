@@ -172,7 +172,19 @@
  */
 struct Image * loadImage(const char* filename)
 {
-    return NULL;
+  FILE * fptr = fopen(filename,"r");
+  if(fptr == NULL)
+    {
+      return NULL;
+    }
+  int number = 0;
+  char value;
+  while(fscanf(fptr , "%c" , & value) == 1)
+    {
+      number++;
+    }
+  
+  fclose(fptr);
 }
 
 
