@@ -1,63 +1,30 @@
+pa06: pa06.o answer06.o
+gcc -g pa06.o answer06.o -o pa06
+pa06.o: pa06.c pa06.h
+gcc -g -Wall -Wshadow -o pa06.o pa06.c
+answer06.o: answer06.c pa06.h
+gcc -g -Wall -Wshadow -o answer06.o answer06.c
+test:pa06
 
-GCC = gcc
-CFLAGS = -g -Wall -Wshadow
-LIBS =
-SOURCES = answer06.c pa06.c
-TARGET = pa06
-TESTN := $(shell seq 1 17)
+# ./pa06 I images/corrupt-testcases/bad-comment-len
+# ./pa06 I images/corrupt-testcases/big-width-height
+# ./pa06 I images/corrupt-testcases/check-magic-bits
+# ./pa06 I images/corrupt-testcases/comment-has-no-null-byte
+# ./pa06 I images/corrupt-testcases/height0
+# ./pa06 I images/corrupt-testcases/height-wrong
+# ./pa06 I images/corrupt-testcases/incomplete-header
+# ./pa06 I images/corrupt-testcases/incomplete-image
+# ./pa06 I images/corrupt-testcases/width0
 
-# -------------------------------------------------------------
-
-TESTS := $(addprefix test,${TESTN})
-
-.PHONY : all build clean environment help testall $(TESTS)
-.DEFAULT_GOAL := build
-
-OBJF = obj
-OBJS = $(patsubst %.c,$(OBJF)/%.o,$(SOURCES))
-
--include $(SOURCES:%=$(OBJF)/%.P)
-
-all: | build testall
-
-testall: | $(TESTS)
-
-build: $(TARGET)
-
+./pa06 I images/01-unnormalized-smile outputs/output1
+# diff -w outputs/output1 expected/01-smile
+./pa06 I images/02-unnormalized-cat-chess > outputs/output2
+# diff -w outputs/output2 expected/02-cat-chess
+./pa06 I images/03-unnormalized-hawkes-bay-NZ > outputs/output3
+# diff -w outputs/output3 expected/03-hawkes-bay-NZ
+./pa06 I images/04-unnormalized-nelsonmandela > outputs/output4
+# diff -w outputs/output4 expected/04-nelsonmandela
+./pa06 I images/05-unnormalized-sagan-stamp > outputs/output5
+# diff -w outputs/output5 expected/05-sagan-stamp
 clean:
-	@cd $(CURDIR)
-	rm -rf $(TARGET) $(OBJF) outputs *.o
-
-environment:
-	@cd $(CURDIR)
-	@mkdir -p outputs
-	@mkdir -p $(OBJF)
-
-help:	
-	@echo "                                                           "
-	@echo "   make            Build $(TARGET)"
-	@echo "   make clean      Remove all temporary files"
-	@echo "   make help       Print this message"
-	@echo "   make test1      Run the zeroeth testcase"
-	@echo "   make test2      Run the first testcase"
-	@echo "   ...             etc."
-	@echo "   make test17     Run the 17th testcase"
-	@echo "   make testall    Run all testcases"
-	@echo
-	@echo "   Testcases 1-13 test integer inputs."
-	@echo "   Testcases 14-17 test string inputs."
-	@echo
-	@echo "   Please try and run your code yourself before testing with the makefile"
-	@echo "   PA06 will have no makefile, so you will cross that bridge soon =0."
-	@echo
-
-$(TARGET): $(OBJS) | environment
-	$(GCC) $(CFLAGS) $(OBJS) $(LIBS) -o $@
-
-$(OBJF)/%.o: %.c | environment
-	@$(GCC) -MM $(CFLAGS) $< | sed 's,^\([^ ]\),$(OBJF)\/\1,g' | sed '$$ s,$$, \\,' > $(OBJF)/$<.P
-	$(GCC) $(CFLAGS) -c -o $@ $<
-
-${TESTS}: test%: $(TARGET) | environment
-	@./bin/test.sh "$(TARGET)" $*
-
+rm -f pa06*.o
