@@ -173,19 +173,62 @@
 struct Image * loadImage(const char* filename)
 {
   FILE * fptr = fopen(filename,"r");
+  char buff[17];
   if(fptr == NULL)
     {
       return NULL;
     }
+  int width = 0;
+  int height = 0;
   int number = 0;
-  char value;
-  while(fscanf(fptr , "%c" , & value) == 1)
+  char * comment;
+  sturct ImageHeader header;
+  number = fread(&header , 1 , 16,fptr);
+  if(number == 0)
     {
-      number++;
+      return NULL;
     }
-  
+  if(header.magic_bits != ECE264_IMAGE_BITS)
+    {
+      return NULL;
+    }
+  width = header.width;
+  height = header.height;
+  if(width <= 0 || height <= 0)
+    {
+      return NULL;
+    }
+  comment = malloc(sizeof(char) * header.comment_len);
+  if(comment == NULL)
+    {
+      free(comment);
+      return NULL;
+    }
+  fread(comment,sizeof(unit32_t),header.comment_len,fptr);
+  struct Image * picture;
+  picture = malloc(sizeof(unit8_t *) * width * height);
+  number = fread(picture,sizeof(unit8_t),width * height,fptr);
+  if(number != width * height)
+    {
+      picture -> width = -1;
+      free(comment);
+      free(picture);
+      return NULL;
+    }
+  picture -> width = width;
+  picture -> height = height;
+  picture -> comment = comment;
+
+  number = fread(buffer , 1 , 1, pftr);
+  if(number == 1)
+    {
+      free(picture);
+      free(comment);
+      return NULL;
+    }
+  return(picture);
   fclose(fptr);
-}
+} 
 
 
 /*
@@ -200,7 +243,10 @@ struct Image * loadImage(const char* filename)
  */
 void freeImage(struct Image * image)
 {
-
+  if(image -> width != -1)
+    {
+      free(image);
+    }
 }
 
 /*
@@ -229,8 +275,27 @@ void freeImage(struct Image * image)
  */
 void linearNormalization(struct Image * image)
 {
-
+  int min = 1000;
+  int max = 49;
+  int lcv = 0;
+  while(lcv < image -> height * image -> width)
+    {
+      if(image -> data[lcv] < min)
+	{
+	  min = image -> data[lcv];
+	}
+      if(image -> data[lcv] > max)
+	{
+	  max = image -> data[lcv];
+	}
+      lcv++;
+    }
+  lcv = 0;
+  while(lcv < image -> height * image -> width)
+    {
+      image -> data[lcv] = (image -> data[lcv] - min) * 255 / (max - min);
+      lcv++;
+    }
 }
-
 
 
