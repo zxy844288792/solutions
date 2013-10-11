@@ -1,61 +1,34 @@
-
 GCC = gcc
 CFLAGS = -g -Wall -Wshadow
-LIBS =
-SOURCES = answer06.c pa06.c
-TARGET = pa06
-TESTN := $(shell seq 0 12)
 
-# -------------------------------------------------------------
+pa06: pa06.o answer06.o
+	$(GCC) $(CFLAGS) pa06.o answer06.o -o pa06
 
-TESTS := $(addprefix test,${TESTN})
+pa06.o: pa06.c pa06.h
+	$(GCC) $(CFLAGS) -c pa06.c 
 
-.PHONY : all build clean environment help testall $(TESTS)
-.DEFAULT_GOAL := build
+answer06.o: answer06.c pa06.h
+	$(GCC) $(CFLAGS) -c answer06.c
 
-OBJF = obj
-OBJS = $(patsubst %.c,$(OBJF)/%.o,$(SOURCES))
+test: test1 test2 test3 test4 test5
 
--include $(SOURCES:%=$(OBJF)/%.P)
+test1: pa06
+	./pa06 images/01-unnormalized-smile.ee264 outputs/output1
+	diff outputs/output1 expected/01-smile.ppm
+	valgrind --tool=memcheck -- leak-check=full --verbose --log-file=valgrindlog1 ./pa06 images/01-unnormalized-smile.ee264 outputs/output1
 
-all: | build testall
+test2: pa06
+	./pa06 images/02-unnormalized-cat-chess.ee264 outputs/output2
+	diff outputs/output2 expected/02-cat-chess.ppm
 
-testall: | $(TESTS)
+test3: pa06
+	./pa06 images/03-unnormalized-hawkes-bay-NZ.ee264 outputs/output3
+	diff outputs/output2 expected/02-hawkes-bay-N.ppm
 
-build: $(TARGET)
+test4: pa06
+	./pa06 images/04-unnormalized-nelsonmandela.ee264 outputs/output4
+	diff outputs/output2 expected/02-nelsonmandela.ppm
 
-clean:
-	@cd $(CURDIR)
-	rm -rf $(TARGET) $(OBJF) outputs
-
-environment:
-	@cd $(CURDIR)
-	@mkdir -p outputs
-	@mkdir -p $(OBJF)
-
-help:
-	@echo
-	@echo "   You do NOT need to use make to run your program. (See below.)"
-	@echo
-	@echo "   make            Build $(TARGET)"
-	@echo "   make testall    Run /all/ testcases"
-	@echo "   make clean      Remove all temporary files"
-	@echo "   make help       Print this message"
-	@echo
-	@echo "   There are 13 testcases. (i.e., 0 through 109.) You can run an "
-	@echo "   individual testcase as follows:"
-	@echo
-	@echo "   make test0      Run the zeroeth testcase"
-	@echo "   make test1      Run the first testcase"
-	@echo "   ...             etc."
-	@echo
-
-$(TARGET): $(OBJS) | environment
-	$(GCC) $(CFLAGS) $(OBJS) $(LIBS) -o $@
-
-$(OBJF)/%.o: %.c | environment
-	@$(GCC) -MM $(CFLAGS) $< | sed 's,^\([^ ]\),$(OBJF)\/\1,g' | sed '$$ s,$$, \\,' > $(OBJF)/$<.P
-	$(GCC) $(CFLAGS) -c -o $@ $<
-
-${TESTS}: test%: $(TARGET) | environment
-	@./bin/test.sh "$(TARGET)" inputs/input$* outputs/output$* expected/expected$* outputs/valgrind-log$*
+test5: pa06
+	./pa06 images/05-unnormalized-segan-stamp.ee264 outputs/output5
+	diff outputs/output2 expected/02-segan-stamp.ppm
