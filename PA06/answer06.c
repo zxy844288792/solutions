@@ -173,61 +173,49 @@
 struct Image * loadImage(const char* filename)
 {
   FILE * fptr = fopen(filename,"r");
-  char buff[17];
   if(fptr == NULL)
     {
       return NULL;
     }
-  int width = 0;
-  int height = 0;
-  int number = 0;
-  char * comment;
-  sturct ImageHeader header;
-  number = fread(&header , 1 , 16,fptr);
-  if(number == 0)
+  int retval;
+  struct ImageHeader header;
+  retval = fread(&header , sizeof(struct ImageHeader) , 1,fptr);
+  if(retval != 1)
     {
       return NULL;
     }
-  if(header.magic_bits != ECE264_IMAGE_BITS)
+  if(header.magic_bits != ECE264_MAGIC)
     {
       return NULL;
     }
-  width = header.width;
-  height = header.height;
-  if(width <= 0 || height <= 0)
+  if(header.width == 0)
     {
       return NULL;
     }
-  comment = malloc(sizeof(char) * header.comment_len);
-  if(comment == NULL)
-    {
-      free(comment);
-      return NULL;
-    }
-  fread(comment,sizeof(unit32_t),header.comment_len,fptr);
   struct Image * picture;
-  picture = malloc(sizeof(unit8_t *) * width * height);
-  number = fread(picture,sizeof(unit8_t),width * height,fptr);
-  if(number != width * height)
+  picture = malloc(sizeof(struct Image));
+  if(picture == NULL)
     {
-      picture -> width = -1;
-      free(comment);
+      return NULL;
+    }
+  picture -> width = header.width;
+  picture -> height = header.height;
+  picture -> comment = malloc(sizeof(char) * header.comment_len);
+  picture -> data = malloc(sizeof(unit8_t) * (header.width) * (header.height));
+  retval = fread(picture -> comment,sizeof(char),header.comment_len,fptr);
+  if(retval != header.comment_len)
+    {
       free(picture);
       return NULL;
     }
-  picture -> width = width;
-  picture -> height = height;
-  picture -> comment = comment;
-
-  number = fread(buffer , 1 , 1, pftr);
-  if(number == 1)
+  retval = fread(picture -> data,sizeof(unit8_t) , header.width * header.height,fptr);
+  if(retval != (header.wifth * header.height))
     {
       free(picture);
-      free(comment);
       return NULL;
     }
-  return(picture);
   fclose(fptr);
+  return(picture);
 } 
 
 
