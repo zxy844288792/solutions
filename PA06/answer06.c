@@ -182,40 +182,54 @@ struct Image * loadImage(const char* filename)
   retval = fread(&header , sizeof(struct ImageHeader) , 1,fptr);
   if(retval != 1)
     {
+      fclose(fptr);
       return NULL;
     }
-  if(header.magic_bits != ECE264_MAGIC)
+  if(header.magic_bits != ECE264_IMAGE_MAGIC_BITS)
     {
       return NULL;
     }
   if(header.width == 0)
     {
+      fclose(fptr);
       return NULL;
     }
-  struct Image * picture;
-  picture = malloc(sizeof(struct Image));
-  if(picture == NULL)
+  struct Image * img;
+  img = malloc(sizeof(struct Image));
+  if(img == NULL)
     {
+      fclose(fptr);
       return NULL;
     }
-  picture -> width = header.width;
-  picture -> height = header.height;
-  picture -> comment = malloc(sizeof(char) * header.comment_len);
-  picture -> data = malloc(sizeof(unit8_t) * (header.width) * (header.height));
-  retval = fread(picture -> comment,sizeof(char),header.comment_len,fptr);
+  img -> width = header.width;
+  img -> height = header.height;
+  img -> comment = malloc(sizeof(char) * header.comment_len);
+  img -> data = malloc(sizeof(uint8_t) * (header.width) * (header.height));
+  retval = fread(img -> comment,sizeof(char),header.comment_len,fptr);
   if(retval != header.comment_len)
     {
-      free(picture);
+      fclose(fptr);
+      freeImage(img);
       return NULL;
     }
-  retval = fread(picture -> data,sizeof(unit8_t) , header.width * header.height,fptr);
-  if(retval != (header.wifth * header.height))
+  retval = fread(img -> data,sizeof(uint8_t) , header.width * header.height,fptr);
+  if(retval != (header.width * header.height))
     {
-      free(picture);
+      fclose(fptr);
+      freeImage(img);
       return NULL;
     }
+  char * buffer[2];
+  retval = fread(buffer , 1 , 1, fptr);
+  if(retval == 1)
+    {
+      fclose(fptr);
+      freeImage(img);
+      return NULL;
+    }
+      
   fclose(fptr);
-  return(picture);
+  return(img);
 } 
 
 
@@ -231,10 +245,9 @@ struct Image * loadImage(const char* filename)
  */
 void freeImage(struct Image * image)
 {
-  if(image -> width != -1)
-    {
-      free(image);
-    }
+  free(image -> data);
+  free(image -> comment);
+  free(image);
 }
 
 /*
