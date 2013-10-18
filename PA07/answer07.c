@@ -17,6 +17,17 @@ void List_print(FILE * out, Node * head)
     printf("\n");
 }
 
+/*void List_dump(Node * head)
+{
+  while(head != NULL)
+    {
+      printf("[%p] %5d: %6d ==> %p\n", 
+	     head, head -> index, head -> value, head -> next);
+      head = head -> next;
+    }
+  printf("\n");
+  }*/
+
 
 /**
  * Please fill in the code below
@@ -133,17 +144,17 @@ Node * List_insert_ascend(Node * head, int value, int index)
     {
       return(List_create(value, index));
     }
-  if((head->index) > index)
+  if((head -> index) > index)
     {
       Node * p = List_create(value, index);
       p -> next = head;
       return p;
     }
-  if(head->index == index)
+  if(head -> index == index)
     {
       return head;
     }
-  head->next = List_insert_ascend(head->next, value, index);
+  head -> next = List_insert_ascend(head->next, value, index);
   return head;
 }
 
@@ -236,14 +247,87 @@ Node * List_copy(Node * head)
  * This function should not modify either "head1" or "head2". You only
  * need to make a clone of "head1".
  */
+
+  Node * List_insert2(Node *, int , int);
+
 Node * List_merge(Node * head1, Node * head2)
 {
   Node * head3 = List_copy(head1);
-  while (head2 != NULL)
+  while(head2 != NULL)
     {
-      head3 = List_insert_ascend(head3 , head2 -> index , head2 -> value);
+      head3 = List_insert2(head3 , head2 -> index , head2 -> value);
       head2 = head2 -> next;
     }
-  return NULL;
+  return head3;
 }
-  
+
+Node * List_insert2(Node * head4 , int index , int value)
+{
+  if(head4 == NULL)
+    {
+    return List_create(value , index);
+    }
+  if((head4 -> index) == index)
+    {
+      if(head4 -> value + value  == 0)
+      {
+	return(head4 -> next);
+      }
+      head4 -> value += value;
+      return head4;
+    }
+  if((head4 -> index) > index)
+    {
+      Node * p = List_create(value , index);
+      p -> next = head4;
+      return p;
+    }
+  head4 -> next = List_insert2(head4 -> next , index , value);
+  return head4;
+}
+
+//void deletezero(Node * head3)
+//{
+//if(head3 != NULL)
+//{
+//Node * temp = head3 -> next;
+//if(head3 -> index == temp -> index)
+//	{
+//	  List_delete(head3 , head3 -> index);
+//	}
+// List_destroy(temp);
+      // if(head3 -> value == 0)
+      //{
+      //List_delete(head3 , head3->index);
+      //}
+      //deletezero(head3 -> next);
+// }
+//}
+
+/*#ifdef MYTEST
+// gcc -g -Wall -Wshadow -DMYTEST -o answer07 answer07.c && ./answer07
+
+int main(int argc, char * * argv)
+{
+  printf("About to run my custom testcases\n");
+
+  Node * head = List_create(100, 10);
+  head -> next = List_create(300, 20);
+  head -> next -> next = List_create(500, 20);
+  head -> next -> next -> next = List_create(400, 30);
+  head -> next -> next -> next -> next = List_create(400, 50);
+
+  List_dump(head);
+
+  Node * todelzero = head -> next;
+  printf("About to deletezoer(%p)\n", todelzero);
+  deletezero(todelzero);
+  List_dump(head);
+
+  return 0;
+}
+
+#endif
+
+
+*/
