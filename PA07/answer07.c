@@ -248,7 +248,8 @@ Node * List_copy(Node * head)
  * need to make a clone of "head1".
  */
 
-  Node * List_insert2(Node *, int , int);
+Node * List_insert2(Node *, int , int);
+Node * deletezero(Node *);
 
 Node * List_merge(Node * head1, Node * head2)
 {
@@ -258,6 +259,7 @@ Node * List_merge(Node * head1, Node * head2)
       head3 = List_insert2(head3 , head2 -> index , head2 -> value);
       head2 = head2 -> next;
     }
+  head3 = deletezero(head3);
   return head3;
 }
 
@@ -269,10 +271,6 @@ Node * List_insert2(Node * head4 , int index , int value)
     }
   if((head4 -> index) == index)
     {
-      if(head4 -> value + value  == 0)
-      {
-	return(head4 -> next);
-      }
       head4 -> value += value;
       return head4;
     }
@@ -286,23 +284,19 @@ Node * List_insert2(Node * head4 , int index , int value)
   return head4;
 }
 
-//void deletezero(Node * head3)
-//{
-//if(head3 != NULL)
-//{
-//Node * temp = head3 -> next;
-//if(head3 -> index == temp -> index)
-//	{
-//	  List_delete(head3 , head3 -> index);
-//	}
-// List_destroy(temp);
-      // if(head3 -> value == 0)
-      //{
-      //List_delete(head3 , head3->index);
-      //}
-      //deletezero(head3 -> next);
-// }
-//}
+Node * deletezero(Node * head3)
+{
+  if(head3 != NULL)
+    {
+      if(head3 -> value == 0)
+	{
+	  head3 = List_delete(head3 , head3->index);
+	  return(head3);
+	}
+      deletezero(head3 -> next);
+    }
+  return(head3);
+}
 
 /*#ifdef MYTEST
 // gcc -g -Wall -Wshadow -DMYTEST -o answer07 answer07.c && ./answer07
