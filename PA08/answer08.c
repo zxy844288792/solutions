@@ -310,50 +310,54 @@ SparseNode * SparseArray_copy(SparseNode * array)
  * 
  * Hint: you may write new functions
  */
-SparseNode * merge(SparseNode * , SparseNode *);
-void merging(SparseNode * , SparseNode * );
+SparseNode * merge2(SparseNode * , SparseNode *);
+SparseNode * merge3(SparseNode * , int , int);
 
 SparseNode * SparseArray_merge(SparseNode * array_1, SparseNode * array_2)
 {
   SparseNode * array3 = SparseArray_copy(array_1);
-  SparseNode * output = merge(array_2 , array3);
-  merging(array_2 , array3);
-  return output;
+  array3 = merge2(array3 , array_2);
+  return array3;
 }
 
-SparseNode * merge(SparseNode * array , SparseNode * array2)
+SparseNode * merge2(SparseNode * array , SparseNode * array2)
 {
-  SparseNode * temp = array2;
+  if(array2 == NULL)
+    {
+      return array;
+    }
+  array = merge2(array , array2 ->left);
+  array = merge2(array , array2 -> right);
+  array = merge3(array , array2 -> index , array2 -> value);
+}
+
+SparseNode * merge3(SparseNode * array , int index , int value)
+{
+  if(value == 0)
+    {
+      return array;
+    }
   if(array == NULL)
     {
-      return NULL;
+      return SparseNode_create(index , value);
     }
-  if(array -> left != NULL)
+  if(array -> index == index)
     {
-      SparseNode * left = array -> left;
-      temp = merge(array -> left , array2);
-      merging(left , array2);
+      array -> value += value;
+      if(array -> value == 0)
+	{
+	  array = SparseArray_remove(array , array -> index);
+	}
+      return array;
     }
-  if(array -> right != NULL)
+  if(array -> index > index)
     {
-      SparseNode * right = array -> right;
-      temp = merge(array -> right , array2);
-      merging(right , array2);
+      array -> left = merge3(array -> left , index , value);
     }
-  return array2;
-}
-
-void merging(SparseNode * array , SparseNode * array2)
-{
-  SparseNode * temp;
-  temp = SparseArray_getNode(array2 , array -> index);
-  if(temp == NULL)
+  else
     {
-      array2= SparseArray_insert(array2 , array -> index , array -> value);
+      array -> right = merge3(array -> right , index , value);
     }
-  if(temp != NULL)
-    {
-      temp -> value += array -> value;
-    }
+  return array;
 }
   
