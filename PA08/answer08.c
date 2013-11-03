@@ -20,8 +20,12 @@
 
 SparseNode *SparseNode_create(int index, int value)
 {
-
-  return NULL;
+  SparseNode * tree = malloc(sizeof(SparseNode));
+  tree -> index = index;
+  tree -> value = value;
+  tree -> left = NULL;
+  tree -> right = NULL;
+  return tree;
 }
 
 /* Add a particular value into a sparse array tree on a particular index.
@@ -44,8 +48,23 @@ SparseNode *SparseNode_create(int index, int value)
 
 SparseNode * SparseArray_insert ( SparseNode * array, int index, int value )
 {
+  if(array == NULL)
+    {
+      array = SparseNode_create(index , value);
+      return array;
+    }
+  if(array -> index ==index)
+    {
+      array -> value = value;
+      return array;
+    }
+  if(array -> index > index)
+    {
+      array -> left = SparseArray_insert(array -> left , index , value);
+      return array;
+    }
+  array -> right = SparseArray_insert(array -> right , index , value);
   return array;
-
 }
 
 /* Build a sparse array tree from given indices and values with specific length.
