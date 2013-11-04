@@ -48,12 +48,16 @@ SparseNode *SparseNode_create(int index, int value)
 
 SparseNode * SparseArray_insert ( SparseNode * array, int index, int value )
 {
+  if(value == 0)
+    {
+      return array;
+    }
   if(array == NULL)
     {
       array = SparseNode_create(index , value);
       return array;
     }
-  if(array -> index ==index)
+  if(array -> index == index)
     {
       array -> value = value;
       return array;
@@ -224,14 +228,15 @@ SparseNode * SparseArray_remove ( SparseNode * array, int index )
     {
       return NULL;
     }
+  if(array -> index > index)
+    {
+      array -> left = SparseArray_remove(array -> left , index);
+      return array;
+    }
   if(array -> index < index)
     {
       array -> right = SparseArray_remove(array -> right , index);
       return array;
-    }
-  if(array -> index > index)
-    {
-      array -> right = SparseArray_remove(array -> left , index);
     }
   if((array -> left == NULL) && (array -> right == NULL))
     {
@@ -257,6 +262,7 @@ SparseNode * SparseArray_remove ( SparseNode * array, int index )
     }
   array -> index = temp -> index;
   array -> value = temp -> value;
+  temp -> index = index;
   array -> right = SparseArray_remove(array -> right , index);
   return array ;
 }
@@ -326,9 +332,16 @@ SparseNode * merge2(SparseNode * array , SparseNode * array2)
     {
       return array;
     }
-  array = merge2(array , array2 ->left);
-  array = merge2(array , array2 -> right);
+  if(array2 -> left != NULL)
+    {
+      array = merge2(array , array2 -> left);
+    }
+  if(array2 -> right != NULL)
+    {
+      array = merge2(array , array2 -> right);
+    }
   array = merge3(array , array2 -> index , array2 -> value);
+  return array;
 }
 
 SparseNode * merge3(SparseNode * array , int index , int value)
@@ -360,4 +373,3 @@ SparseNode * merge3(SparseNode * array , int index , int value)
     }
   return array;
 }
-  
