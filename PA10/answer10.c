@@ -60,7 +60,11 @@ int Stack_isEmpty(Stack * stack)
  */
 int Stack_pop(Stack * stack)
 {
-    return -1;
+  ListNode * ln = stack -> list;
+  int value = ln -> value;
+  stack -> list = ln -> next;
+  free(ln);
+  return value;
 }
 
 /**
@@ -72,7 +76,10 @@ int Stack_pop(Stack * stack)
  */
 void Stack_push(Stack * stack, int value)
 {
-
+  ListNode * new = malloc(sizeof(ListNode));
+  new -> value = value;
+  new -> next = stack -> list;
+  stack -> list = new;
 }
 
 /**
@@ -97,7 +104,27 @@ void Stack_push(Stack * stack, int value)
  */
 void stackSort(int * array, int len)
 {
-
+  int lcv1 = 1;
+  int lcv2 = 0;
+  int * new = malloc(sizeof(int) * len);
+  Stack * stack = NULL;
+  stack = Stack_create();
+  stack -> list = malloc(sizeof(ListNode));
+  ListNOde * li = stack -> list;
+  li -> value = array[0];
+  li -> next = NULL;
+  if(isStackSortable(array , len) != TRUE || len == 1)
+    {
+      Stack_destory(stack);
+      free(new);
+      return;
+    }
+  while(lcv < len)
+    {
+      if(Stack_isEmpty(stack) || array[lcv] > li -> value)
+	{
+	  while(!Stack_isEmpty{stack)
+	
 }
 
 /**
