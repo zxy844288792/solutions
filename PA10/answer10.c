@@ -1,6 +1,7 @@
 
 #include "pa10.h"
 #include "tree.h"
+#include "tree.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,9 +14,9 @@
  */
 Stack * Stack_create()
 {
-  Stack * sta = malloc(sizeof(Stack));
-  sta -> list = NULL;
-  return sta;
+  Stack * stack = malloc(sizeof(Stack));
+  stack -> list = NULL;
+  return stack;
 }
 
 /**
@@ -32,9 +33,9 @@ void Stack_destroy(Stack * stack)
   ListNode * li = stack -> list;
   while(li != NULL)
     {
-      struct list_node_t * p = li -> next;
+      struct list_node_t * temp = li -> next;
       free(li);
-      li = p;
+      li = temp;
     }
   free(stack);
 }
@@ -60,10 +61,10 @@ int Stack_isEmpty(Stack * stack)
  */
 int Stack_pop(Stack * stack)
 {
-  ListNode * ln = stack -> list;
-  int value = ln -> value;
-  stack -> list = ln -> next;
-  free(ln);
+  ListNode * li = stack -> list;
+  int value = li -> value;
+  stack -> list = li -> next;
+  free(li);
   return value;
 }
 
@@ -104,27 +105,56 @@ void Stack_push(Stack * stack, int value)
  */
 void stackSort(int * array, int len)
 {
-  int lcv1 = 1;
+  int lcv_write = 1;
   int lcv2 = 0;
   int * new = malloc(sizeof(int) * len);
   Stack * stack = NULL;
   stack = Stack_create();
   stack -> list = malloc(sizeof(ListNode));
-  ListNOde * li = stack -> list;
+  ListNode * li = stack -> list;
   li -> value = array[0];
   li -> next = NULL;
-  if(isStackSortable(array , len) != TRUE || len == 1)
+
+  if(len == 1 || isStackSortable(array , len) == FALSE)
     {
-      Stack_destory(stack);
       free(new);
+      Stack_destroy(stack);
       return;
     }
-  while(lcv < len)
+  while(lcv_write < len)
     {
-      if(Stack_isEmpty(stack) || array[lcv] > li -> value)
+      if(array[lcv_write] < li -> value)
 	{
-	  while(!Stack_isEmpty{stack)
-	
+	  Stack_push(stack , array[lcv_write]);
+	  li = stack -> list;
+	}
+      else if(array[lcv_write] > li -> value || Stack_isEmpty(stack))
+	{
+	  while(!Stack_isEmpty(stack) && array[lcv_write] > li -> value)
+	    {
+	      new[lcv2] = Stack_pop(stack);
+	      lcv2++;
+	      li = stack -> list;
+	    }
+	  Stack_push(stack , array[lcv_write]);
+	  li = stack -> list;
+	}
+      lcv_write++;
+    }
+  while(!Stack_isEmpty(stack))
+    {
+      new[lcv2++] = Stack_pop(stack);
+    }
+  for(lcv_write = 0;lcv_write < len;lcv_write++)
+    {
+      array[lcv_write] = new[lcv_write];
+    }
+  if(stack != NULL || stack -> list != NULL)
+    {
+      Stack_destroy(stack);
+    }
+  free(new);
+  return;
 }
 
 /**
@@ -145,7 +175,57 @@ void stackSort(int * array, int len)
  */
 int isStackSortable(int * array, int len)
 {
-    return FALSE;
+  int lcv = 0;
+  int locmax = 0;
+  int max = 0;
+  int maxleft = -1;
+  int minright = 99999;
+
+  if(len < 3)
+    {
+      return TRUE;
+    }
+
+  while(lcv < len)
+    {
+      if(array[lcv] > max)
+        {
+         max = array[lcv];
+         locmax = lcv;
+        }
+      lcv++;
+    }
+
+  lcv = 0;
+  while(lcv < locmax)
+    {
+      if(array[lcv] > maxleft)
+        {
+         maxleft = array[lcv];
+        }
+      lcv++;
+    }
+
+    for(lcv = locmax + 1; lcv < len; lcv++)
+    {
+      if(array[lcv] < minright)
+        {
+         minright = array[lcv];
+        }
+    }
+
+  if(maxleft <= minright)
+    {
+      if((isStackSortable(array, locmax) && isStackSortable(&array[locmax + 1], len - locmax - 1)) == 1)
+        {
+         return TRUE;
+        }
+    }
+  else
+    {
+      return FALSE;
+    }
+  return FALSE;
 }
 
 /**
@@ -163,11 +243,52 @@ int isStackSortable(int * array, int len)
  * The correct outputs for sizes [1..9] are in the 'expected' 
  * directory.
  */
+void permutation(int *, int, int);
+void swap(int*, int*);
+
 void genShapes(int k)
 {
-
+  int * array = malloc(sizeof(int) * k);
+  int lcv = 0;
+  int lcv2 = 0;
+  while(lcv < k)
+    {
+      array[lcv] = lcv;
+      lcv++;
+    }
+  permutation(array , lcv2 , k);
+  free(array);
 }
 
+void permutation(int * arr, int ind, int len)
+{
+  int lcv = 0;
+  if(ind == len)
+    {
+      if(isStackSortable(arr, len))
+        {
+         TreeNode * tree = Tree_build(arr, len);
+         Tree_printShape(tree);
+         Tree_destroy(tree);
+        }
+      return;
+    }
+  lcv = ind;
+  while(lcv < len)
+    {
+      swap(&arr[lcv], &arr[ind]);
+      permutation(arr, ind + 1, len);
+      swap(&arr[lcv], &arr[ind]);
+      lcv++;
+    }
+}
+
+void swap(int* a, int* b)
+{
+  int temp = *a;
+  *a = *b;
+  *b = temp;
+}
 
 
 
