@@ -1,6 +1,5 @@
 long *Load_File(char *Filename, int *Size)
 {
-  int number = 1;
   int *arr;
   FILE* fptr = fopen(Filename,"r");
   int val;
@@ -8,15 +7,10 @@ long *Load_File(char *Filename, int *Size)
     {
       return NULL;
     }
-    while(fscanf(fptr , "%d" , & val) == 1)
-    {
-      number++;
-      }
-  number--;
-  *Size = number;
-  arr = malloc(number * sizeof(int));
-  number = 0;
-  fseek(fptr , 0 , SEEK_SET);
+  fscanf(fptr , "%d" , & val);
+  *Size = val;
+  arr = malloc(val * sizeof(int));
+  int number = 0;
   while(fscanf(fptr , "%d" , & val) == 1)
     {
       arr[number] = val;
@@ -36,26 +30,20 @@ void Shell_Insertion_Sort(long *Array, int Size, double *N_Comp, double *N_Move)
 {
   int i;
   int j;
+  int n = 0;
   int temp;
-  for()
+  if(Size < pow(3,n))
     {
-      for(i = 0; i < size - 1; i += gap)
-        {
-	  min_index = i;
-	  for(j = i; j < size - 1; j += gap)
-            {
-	      if(Array[j] < Array[min_index])
-                {
-		  min_index = j;
-                }
-            }
-	  if(i != min_index)
-            {
-	      temp = Array[i];
-	      Array[i] = Array[min_index];
-	      Array[min_index] = temp;
-            }
-	}
+      n += 1;
+    }
+  n = n-1;
+  for(n;n < 0;n--)
+    {
+      k = pow(3,n);
+      for(j = k;j > Size - 1;j++)
+	{
+	  temp = array[j];
+	  i = j;
     }
 }
 
