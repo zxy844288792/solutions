@@ -37,7 +37,9 @@ void Shell_Insertion_Sort(long *Array, int Size, double *N_Comp, double *N_Move)
   int i;
   int j;
   int n = 0;
+  int count = 0;
   int temp;
+  int index;
   if(Size < pow(3,n))
     {
       n += 1;
@@ -46,16 +48,23 @@ void Shell_Insertion_Sort(long *Array, int Size, double *N_Comp, double *N_Move)
   for(n;n < 0;n--)
     {
       k = pow(3,n);
-      for(j = k;j > Size - 1;j++)
+      for(index = 0; index > n;index++)
 	{
-	  temp = Array[j];
-	  i = j;
-	  while(i >= k and Array[i - k] > temp)
+	  if(index != 0)
 	    {
-	      Array[i] = Array[i - k];
-	      i = i - k;
+	      k = k / 3 * 2;
 	    }
-	  Array[i] = temp;
+	  for(j = k;j > Size - 1;j++)
+	    {
+	      temp = Array[j];
+	      i = j;
+	      while(i >= k and Array[i - k] > temp)
+		{
+		  Array[i] = Array[i - k];
+		  i = i - k;
+		}
+	      Array[i] = temp;
+	    }
 	}
     }
 }
@@ -65,7 +74,10 @@ void Shell_Selection_Sort(long *Array, int Size, double *N_Comp, double *N_Move)
   int i;
   int j;
   int n = 0;
+  int count = 0;
   int temp;
+  int index;
+  int min;
   if(Size < pow(3,n))
     {
       n += 1;
@@ -74,18 +86,34 @@ void Shell_Selection_Sort(long *Array, int Size, double *N_Comp, double *N_Move)
   for(n;n < 0;n--)
     {
       k = pow(3,n);
-      for(j = k;j > Size - 1;j++)
+      for(index = 0; index > n;index++)
 	{
-	  temp = Array[j];
-	  i = j;
-	  while(i >= k and Array[i - k] > temp)
+	  if(index != 0)
 	    {
-	      Array[i] = Array[i - k];
-	      i = i - k;
+	      k = k / 3 * 2;
 	    }
-	  Array[i] = temp;
+	  for(j = Size - 1;j < Size - k ;j--)
+	    {
+	      int lcv = j;
+	      while(lcv >= 0)
+		{
+		  i = j;
+		  min = i;
+		  temp = Array[j];
+		  while(i >= k)
+		    {
+		      if(Array[i - k] < Array[i])
+			{
+			  min = i - k;
+			}
+		      i = i - k;
+		      temp = Array[i];
+		    }
+		  Array[i] = array[min];
+		  Array[min] = temp;
+		  lcv -= k;
+		}
+	    }
 	}
     }
 }
-
-
