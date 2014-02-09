@@ -62,7 +62,9 @@ void Shell_Insertion_Sort(long *Array, int Size, double *N_Comp, double *N_Move)
 		{
 		  Array[i] = Array[i - k];
 		  i = i - k;
+		  *N_Move += 1;
 		}
+	      *N_Comp += j / k;
 	      Array[i] = temp;
 	    }
 	}
