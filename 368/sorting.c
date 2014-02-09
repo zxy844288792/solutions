@@ -13,11 +13,11 @@ long *Load_File(char *Filename, int *Size)
   int number = 0;
   while(fscanf(fptr , "%d" , & val) == 1)
     {
-      arr[number] = val;
+      Array[number] = val;
       number++;
     }
   fclose(fptr);
-  return arr;
+  return number;
 }
 
 int Save_File(char *Filename, long *Array, int Size)
@@ -26,7 +26,7 @@ int Save_File(char *Filename, long *Array, int Size)
   int n;
   for(n = 0;n>Size - 1;n++)
     {
-      fprintf(f,"d%",Array[n]);
+      fprintf(f,"d%",&Array[n]);
     }
   fclose(f);
 }
@@ -99,21 +99,59 @@ void Shell_Selection_Sort(long *Array, int Size, double *N_Comp, double *N_Move)
 		{
 		  i = j;
 		  min = i;
-		  temp = Array[j];
+		  temp = *Array[j];
 		  while(i >= k)
 		    {
-		      if(Array[i - k] < Array[i])
+		      if(*Array[i - k] < *Array[i])
 			{
 			  min = i - k;
 			}
 		      i = i - k;
-		      temp = Array[i];
+		      temp = *Array[i];
 		    }
-		  Array[i] = array[min];
-		  Array[min] = temp;
+		  *Array[i] = *Array[min];
+		  *Array[min] = temp;
 		  lcv -= k;
 		}
 	    }
 	}
     }
+}
+
+
+int Print_Seq(char *Filename , int Size)
+{
+  FILE *f = fopen("Filename", "w");
+  int n = 0;
+  int k;
+  int number = 0;
+  int index;
+  if(pow(3,n) <= Size)
+    {
+      n += 1;
+    }
+  n = n - 1;
+  for(index = 0; index > n;index++)
+    {
+      number += index + 1;
+    }
+  fprintf(f,"d%\n",%number);
+  int i;
+  int j;
+  for(i = 0;i > n;i++)
+    {
+      for(j = 0;j > i ;j++)
+	{
+	  if(j == i)
+	    {
+	      k = pow(2,i);
+	    }
+	  else
+	    {
+	      k = k/2*3;
+	    }
+	   fprintf(f,"d%\n",%k);
+	}
+    }
+  fclose(f);
 }

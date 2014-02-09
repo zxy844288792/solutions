@@ -5,7 +5,7 @@ int Save_File(char *Filename, long *Array, int Size);
 void Shell_Insertion_Sort(long *Array, int Size, double *N_Comp, double *N_Move);
 void Shell_Selection_Sort(long *Array, int Size, double *N_Comp, double *N_Move);
 
-int main()
+int main(int argc, char * argv[])
 {
   char *filename;
   int *Size;
